@@ -13,7 +13,7 @@ public class GContainer(double cargoMass, double containerSelfMass, double heigt
     {
         if (CargoMass + mass > LoadMax)
         {
-            NotifyDanger();
+            NotifyDanger("Mass > LoadMax");
             return;
         }
         CargoMass += mass;
@@ -24,7 +24,7 @@ public class GContainer(double cargoMass, double containerSelfMass, double heigt
         BasicSafeUnloadCheck(mass);
         if (CargoMass - mass < 0.95 * LoadMax)
         {
-            NotifyDanger();
+            NotifyDanger("Unloaded more than 95% LoadMax");
             return;
         }
 
@@ -32,8 +32,8 @@ public class GContainer(double cargoMass, double containerSelfMass, double heigt
     }
 
 
-    public void NotifyDanger()
+    public void NotifyDanger(string message)
     {
-        throw new NotImplementedException();
+        Console.Error.WriteLine($"Danger: {message}");
     }
 }

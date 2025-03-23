@@ -1,3 +1,5 @@
+using Microsoft.VisualBasic;
+
 namespace CW_2_s29916;
 
 public abstract class AbstractContainer(double cargoMass, double containerSelfMass, double heigth, double loadMax, string sn)
@@ -32,5 +34,15 @@ public abstract class AbstractContainer(double cargoMass, double containerSelfMa
     {
         BasicSafeUnloadCheck(mass);
         CargoMass -= mass;
+    }
+
+    public override string ToString()
+    {
+        return $"[{SN}]";
+    }
+
+    public string Information()
+    {
+        return $"{SN}: \n\tCargoMass: {CargoMass}, \n\tContainerSelfMass: {ContainerSelfMass}, \n\tHeigth: {Heigth}, \n\toadMax: {LoadMax}";
     }
 }

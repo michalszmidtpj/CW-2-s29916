@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace CW_2_s29916;
 
 public class LContainer(double cargoMass, double containerSelfMass, double heigth, double loadMax, bool unsafeCargo)
@@ -13,20 +15,20 @@ public class LContainer(double cargoMass, double containerSelfMass, double heigt
         BasicSafeLoadCheck(mass);
         if (UnsafeCargo && CargoMass + mass >= 0.5 * LoadMax)
         {
-            NotifyDanger();
+            NotifyDanger("Mass > 50% LoadMax");
             return;
         } 
         if (!UnsafeCargo && CargoMass + mass > 0.9 * LoadMax)
         {
-            NotifyDanger();
+            NotifyDanger("Mass > 90% LoadMax");
             return;
         }
 
         CargoMass += mass;
     }
 
-    public void NotifyDanger()
+    public void NotifyDanger(string message)
     {
-        throw new NotImplementedException();
+        Console.Error.WriteLine($"Danger: {message}");
     }
 }

@@ -4,29 +4,53 @@ public class Containership(double maxSpeed, int maxCapacity, double maxMass)
 {
     public override string ToString()
     {
+        var x = Containers.Select(x => x.ToString());
+        var y = string.Join(", ", x);
         return
-            $"Kontenerowiec: VMAX:{MaxSpeed}, CAPMAX{MaxCapacity}, MASSMAX: {MaxMass}\nLOAD: {Containers.ToString()}";
+            $"Kontenerowiec: VMAX:{MaxSpeed}, CAPMAX{MaxCapacity}, MASSMAX: {MaxMass}\n\tLOAD: {y}";
     }
 
     public List<AbstractContainer> Containers { get; private set; } = new List<AbstractContainer>();
-    public double MaxSpeed { get; private set; } = maxSpeed;
-    public int MaxCapacity { get; private set; } = maxCapacity;
-    public double MaxMass { get; private set; } = maxMass;
+    public double MaxSpeed { get; private set; } = maxSpeed; // wezly
+    public int MaxCapacity { get; private set; } = maxCapacity; // num
+    public double MaxMass { get; private set; } = maxMass; // ton
 
+
+    private double totalMassInTones()
+    {
+        return totalMassTonesRange(Containers);
+    }
+
+    private static double totalMassTonesRange(List<AbstractContainer> containers)
+    {
+        return containers.Sum(x => x.CargoMass + x.ContainerSelfMass) / 1000;
+    }
 
     public void LoadContainer(AbstractContainer container)
     {
-        Containers.Add(container);
+        if (Containers.Count < MaxCapacity &&
+            totalMassInTones() + container.CargoMass + container.ContainerSelfMass <= MaxMass)
+            Containers.Add(container);
+        else
+        {
+            throw new OverfillException();
+        }
     }
 
     public void LoadContainers(List<AbstractContainer> containers)
     {
-        Containers.AddRange(containers);
+        if (Containers.Count < MaxCapacity && totalMassInTones() + totalMassTonesRange(containers) <= MaxMass)
+            Containers.AddRange(containers);
+        else
+        {
+            throw new OverfillException();
+        }
     }
 
     public void UnloadContainer(AbstractContainer container)
     {
-        Containers.Remove(container);
+        if (Containers.Contains(container))
+            Containers.Remove(container);
     }
 
     public List<AbstractContainer> UnloadContainers()
